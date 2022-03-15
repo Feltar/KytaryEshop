@@ -1,0 +1,71 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Kytary.Models.UzivatelModel;
+
+
+<div class="container">
+    <div class="row">
+        <div class="offset-md-4">
+            @{
+                @using (Html.BeginForm())
+                {
+                    <form>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.UzivatelskeJmeno)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.UzivatelskeJmeno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Master234" } } )
+                                @Html.ValidationMessageFor(model => model.UzivatelskeJmeno, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.KrestniJmeno)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.KrestniJmeno, new { htmlAttributes = new { @class = "form-control", @placeholder = "Honza" } } )
+                                @Html.ValidationMessageFor(model => model.KrestniJmeno, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.Prijmeni)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.Prijmeni, new { htmlAttributes = new { @class = "form-control", @placeholder = "Polivka" } } )
+                                @Html.ValidationMessageFor(model => model.Prijmeni, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.Adresa)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.Adresa, new { htmlAttributes = new { @class = "form-control", @placeholder = "Morseova 32, Praha 10" } } )
+                                @Html.ValidationMessageFor(model => model.Adresa, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.EmailovaAdresa)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.EmailovaAdresa, new { htmlAttributes = new { @class = "form-control", @type = "email", @placeholder = "honzanovak@seznam.cz" } } )
+                                @Html.ValidationMessageFor(model => model.EmailovaAdresa, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.Heslo)
+                            <div class="col-md-5 ">
+                                @Html.EditorFor(model=>model.Heslo, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "qwert"} } )
+                                @Html.ValidationMessageFor(model => model.Heslo, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.PotvrzeniHesla)
+                            <div class="col-md-5 ">
+                                @Html.EditorFor(model=>model.PotvrzeniHesla, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "qwert"} } )
+                                @Html.ValidationMessageFor(model => model.PotvrzeniHesla, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <br />
+                        <button type="submit" class="btn btn-outline-dark btn-sm">Hotovo</button>
+                        <label class="field-validation-error"> @Html.DisplayFor(model => model.ChybovaHlaska) </label>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+</div>

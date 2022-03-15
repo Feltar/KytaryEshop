@@ -1,0 +1,256 @@
+@import url(https://fonts.googleapis.com/css2?family=Catamaran:wght@100;200;300;400;500;600&display=swap);
+
+.obal{
+  margin-top: 50px;
+
+  display: grid;
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 65%;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+
+  margin-left: 17.5%;
+}
+
+
+
+.mrizkaKarty{
+
+
+
+  width: fit-content;
+  height: fit-content;
+  grid-gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+  "karta1 karta2 karta3 karta4"
+  "karta5 karta6 karta7 karta8"
+  "karta9 karta10 karta11 karta12"
+}
+#karta1{
+  grid-area: karta1;
+}
+#karta2{
+  grid-area: karta2;
+}
+#karta3{
+  grid-area: karta3;
+}
+#karta4{
+  grid-area: karta4;
+}
+#karta5{
+  grid-area: karta5;
+}
+#karta6{
+  grid-area: karta6;
+}
+#karta7{
+  grid-area: karta7;
+}
+#karta8{
+  grid-area: karta8;
+}
+#karta9{
+  grid-area: karta9;
+}
+#karta10{
+  grid-area: karta10;
+}
+#karta11{
+  grid-area: karta11;
+}
+#karta12{
+  grid-area: karta12;
+}
+
+@media screen and (max-width: 900px) {
+  .mrizkaKarty{
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+    "karta1 karta2 karta3"
+    "karta4 karta5 karta6"
+    "karta7 karta8 karta9"
+    "karta10 karta11 karta12";
+
+  }
+}
+@media screen and (max-width: 712px) {
+  .mrizkaKarty{
+    grid-template-columns: 1fr 1fr ;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+    "karta1 karta2 "
+    "karta3 karta4 "
+    "karta5 karta6"
+    "karta7 karta8 "
+    "karta9 karta10"
+    "karta11 karta12"
+    ;
+  }
+}
+
+
+.main{
+  max-width: 100%;
+
+}
+
+
+
+
+.karta{
+  font-family: Catamaran;
+  width:fit-content;
+  font-weight: 600;
+
+  display: grid; /*we name this area grid*/
+  /*define rows and columns*/
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 30px 30px 20px;
+  /*1frame for title, than header, than (cena and dostupnost) and than one for footer*/
+  grid-template-areas:
+    "fotka fotka"
+    "nazev nazev"
+    "cena dostupnost"
+    "hlaskaNedostatek hlaskaNedostatek"
+    ;
+
+}
+
+
+.fotka {
+    text-align: center;
+    text-justify: center;
+    grid-area: fotka;
+    background-color: rgb(249,243,227);
+}
+.fotka img{
+  width:   auto;
+}
+.fotka:hover{
+  transform: scale(1.01);
+  cursor: pointer;
+}
+.nazev{
+  text-align: center;
+  grid-area: nazev;
+  background-color: rgb(249,243,227);
+}
+.cena{
+  text-align: center;
+  display: flex;
+
+  align-items:center;
+  justify-content: center;
+
+  grid-area: cena;
+  background-color: rgb(249,243,227);
+}
+.dostupnost{
+  text-align: center;
+  grid-area: dostupnost;
+  background-color: rgb(249,243,227);
+}
+
+    margin-top: 20px;
+    text-align:center;
+}
+.odkazy a{
+      padding: 0 10px;
+      font-size: 20px;
+      color: black;
+}
+
+@media screen and (max-width: 1310px){
+  .radek{
+    display: grid;
+    width: 80%;
+    margin: 0 10%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 1fr 1fr;
+
+  }
+
+}
+
+
+
+
+
+
+
+.dostupnost {
+    text-align: center;
+    grid-area: dostupnost;
+    background-color: rgb(249,243,227);
+    display: grid;
+    grid-template-columns: "1fr 1fr 1fr";
+    grid-template-areas: "minusTlacitkoArtikly pocetVKosiku plusTlacitkoArtikly "
+}
+
+
+.pocetVKosiku {
+    grid-area: pocetVKosiku;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+.minusTlacitkoArtikly {
+    grid-area: minusTlacitkoArtikly;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+ .minusTlacitkoArtikly:hover {
+     cursor: pointer;
+}
+
+
+.plusTlacitkoArtikly {
+    grid-area: plusTlacitkoArtikly;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.plusTlacitkoArtikly:hover {
+    cursor: pointer;
+}
+
+
+
+.hlaskaNedostatek {
+    grid-area: hlaskaNedostatek;
+    background-color: rgb(249,243,227);
+    font-family: Catamaran;
+    font-size: 14px;
+    padding-left:10%;
+}
+
+
+
+.odkazy {
+    margin: 0 auto;
+}
+
+.odkazy a {
+    padding: 3px;
+    color: black;
+    font-weight: 400;
+    font-size: 18px;
+}
+.odkazy b {
+    padding: 3px;
+    color: black;
+    font-weight: 400;
+    font-size: 15px;
+}

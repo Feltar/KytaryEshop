@@ -1,0 +1,155 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<PolozkaKosikuKompletModel>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@200;300;400;500;600&family=Oooh+Baby&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@500&family=Alegreya+SC&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="~/CssSoubory/kartyKosiku.css">
+
+
+
+
+
+
+<ul class="kosik">
+    @foreach(var polozka in Model){
+         string idKarta = "kartaKosiku"+ polozka.Artikl.IdArtikl;
+        <li class="kartaKosiku" id=@idKarta>
+            @{    
+                string a = "~/Obrazky/" + polozka.Artikl.TypArtiklu.ToString() +"/"; 
+                a += @polozka.Artikl.Znacka;
+                a += " "; 
+                a += @polozka.Artikl.NazevProdukt;
+                a += ".jpg";
+            }
+            <div class="obrazekKartaKosik">
+                <img src="@Url.Content(@a)" alt="Image" />
+            </div>
+            <div class="popisekKartaKosik">
+                <div class="NazevKartaKosik">
+                    @polozka.Artikl.Znacka @polozka.Artikl.NazevProdukt
+                </div>
+                <div class="dostupnostACenaKartaKosik">
+                    <div class="cenaKosik">
+                        @polozka.Artikl.CenaKus Kč
+
+                    </div>
+                    <div class="dostupnostKosik">
+                        @if (polozka.Artikl.KusuNaSklade > 0){
+                            <p> Skladem</p>
+                        }
+                         else{
+                            <p> Není skladem </p>
+                         }
+                    </div>
+                </div>
+                <div class="urceniPoctuKartaKosik">
+                    @{
+                        string idMinusTlacitka = "minusTlacitko" + polozka.Artikl.IdArtikl;
+                        string idPlusTlacitka = "plusTlacitko" + polozka.Artikl.IdArtikl;
+                        string idpocetVKosiku = "pocetVKosiku" + polozka.Artikl.IdArtikl;
+                    }
+                    <a class="minusTlacitkoKosik" id =@idMinusTlacitka> - </a>
+                    <span class="pocetKartaKosik" id=@idpocetVKosiku> @polozka.PocetKusuVKosiku </span>
+                    <a class="plusTlacitkoKosik" id =@idPlusTlacitka> + </a>
+                </div>
+            </div>
+        </li>
+    }
+    @if(Model.Count>0){
+        <div class="blokSTlacitkem offset-md-6" >
+            <a class="tlacitkoPotvrzeniObjednavky" href = @Url.Action("VyridObjednavku","Kosik")>
+                Odeslat
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="hlaskaZadnaPolozky">
+            V košíku bohužel zatím nejsou žadné položky.
+
+        </div>
+    }
+</ul>
+
+<div class="hlaskaZadnaPolozky" id="uzZadnePolozkyHlaska">
+    V košíku už nejsou žadné další položky.
+</div>
+
+<script>
+    var idArtiklu = 0;
+    var pocetVKosiku = 0;
+    $("#uzZadnePolozkyHlaska").hide();
+
+    @*---------------------------------------------------------minus tlacitko handler----------------------------------------------------------------------------------------*@
+    function vyberPosledniCisloZeStringu(retezec){
+        var regex = "[0-9]+";
+        var podretezce = retezec.match(regex);
+        return podretezce[podretezce.length-1]; 
+    }
+    $(".minusTlacitkoKosik").click(
+        function(){
+            var obsahIdAtributuElementTlacitka = $(this).attr("id");
+            idArtiklu = parseInt(vyberPosledniCisloZeStringu(obsahIdAtributuElementTlacitka));
+            var idElementuPoctuVKosiku = "pocetVKosiku"+idArtiklu; 
+            pocetVKosiku = parseInt($("#"+idElementuPoctuVKosiku).html());
+            if(pocetVKosiku>0 )
+                customAjaxMinus();
+        }
+    );
+
+    function customAjaxMinus() {
+            $.ajax({
+                  type: 'GET',
+                  url: '@Url.Action("MinusTlacitkoKontroler", "Kosik")',
+                  success: function (data) { 
+                           $("#pocetVKosiku"+idArtiklu).html( data );
+                           if(data==0){ 
+                                $("#kartaKosiku"+idArtiklu).remove();
+                           }
+                           if($(".kartaKosiku").length == 0){ @*jestlize pocet karet je roven nule tak shovej tlacitko*@
+                                $(".tlacitkoPotvrzeniObjednavky").remove();
+                                $("#uzZadnePolozkyHlaska").show();
+                           }
+
+                  },
+                  error: function (errorData) {  },
+                  data: { pocet: pocetVKosiku, idArtikl: idArtiklu }
+                });
+    }
+
+
+    @*---------------------------------------------------------plus tlacitko handler----------------------------------------------------------------------------------------*@
+    $(".plusTlacitkoKosik").click(
+        function(){
+            var obsahIdAtributuElementTlacitka = $(this).attr("id");
+            idArtiklu = parseInt(vyberPosledniCisloZeStringu(obsahIdAtributuElementTlacitka));
+            var idElementuPoctuVKosiku = "pocetVKosiku"+idArtiklu; 
+            pocetVKosiku = parseInt($("#"+idElementuPoctuVKosiku).html());
+            customAjaxPlus();
+        }
+    );
+
+    function customAjaxPlus() {
+            $.ajax({
+                  type: 'GET',
+                  url: '@Url.Action("PlusTlacitkoKontroler", "Kosik")',
+                  success: function (data) { 
+                           $("#pocetVKosiku"+idArtiklu).html( data );  
+                  },
+                  error: function (errorData) {  },
+                  data: { pocet: pocetVKosiku, idArtikl: idArtiklu }
+                });
+    }
+
+        
+</script>

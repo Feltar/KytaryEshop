@@ -1,0 +1,32 @@
+﻿
+@model List<ObjednavkaModel> 
+    @if (Model == null)
+    {
+        <h1> Ještě jste si nic neobjednal </h1>
+    }
+    else
+    @foreach(var objednavka in Model){
+            <div style= "margin-top:50px; margin-left:40%;">
+                <h1 style = "font-size:large">
+                    @objednavka.Datum.ToShortDateString()
+                </h1>
+                @foreach (var polozka in objednavka.Artikly)
+                {
+                            string urlObrazku = "~/Obrazky/" + polozka.TypArtiklu.ToString() +"/"; 
+                            urlObrazku += polozka.Znacka;
+                            urlObrazku += " "; 
+                            urlObrazku += polozka.NazevProdukt;
+                            urlObrazku += ".jpg";
+                          <div class="karta">
+                                <div class="fotka">
+                                    <img src="@Url.Content(urlObrazku)" alt="Image" />
+                                </div>
+                                <div class="nazev"> @polozka.Znacka <br> @polozka.NazevProdukt </div>
+                                <div class="cena"> @polozka.CenaKus Kč </div>
+                                <div class="dostupnost"> 
+                                     <span class="pocetVKosiku">  @polozka.PocetKusu </span>
+                                </div>
+                            </div>
+                }
+            </div>
+        }

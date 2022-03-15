@@ -1,0 +1,156 @@
+﻿@using Kytary.Backend.BModels
+@using Kytary.Models.Enum
+
+@{
+    ViewData["Title"] = "Kytary Sekerka"; 
+
+}
+
+
+@model List<PolozkaKosikuKompletModel>
+<script src="~/lib/jquery/dist/jquery.min.js"> </script> 	
+<script src="~/lib/jquery/dist/jquery.min.js"> </script> 	
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"> </script> 	
+
+<div class="mrizkaTelo">
+    
+    <div class="baner">
+        <img src="~/Obrazky/FENDER_banner.webp" alt="">
+    </div>
+
+    <!-- karty----------------------------------------------------------------------------------------------------->
+    <div class="mrizkaKarty">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    int idProduktu = Model[i].Artikl.IdArtikl;
+                    string urlObrazku = "~/Obrazky/" + Model[i].Artikl.TypArtiklu.ToString() +"/"; 
+                    urlObrazku += @Model[i].Artikl.Znacka;
+                    urlObrazku += " "; 
+                    urlObrazku += @Model[i].Artikl.NazevProdukt;
+                    urlObrazku += ".jpg";
+                    <!-- karta------------------------------------>
+                    <div class="karta" id=@idProduktu>
+                        <div class="fotka">
+                            <img src="@Url.Content(urlObrazku)" alt="Image" />
+                        </div>
+                        <div class="nazev"> @Model[i].Artikl.Znacka <br> @Model[i].Artikl.NazevProdukt </div>
+                        <div class="cena"> @Model[i].Artikl.CenaKus Kč </div>
+
+                        <div class="dostupnost"> 
+                            @{
+                                string idMinusTlacitko = "minusTlacitkoArtikly" + idProduktu;
+                            } 
+                            @if (User.Identity.Name is not null)
+                            {
+                                <span class="minusTlacitkoArtikly"  style="color:green" id=@idMinusTlacitko> - </span>
+                            }
+                            @{
+                                string idPocetVKosiku = "pocetVKosiku" + idProduktu;
+                            } 
+                            @if (User.Identity.Name is not null)
+                            {
+                                <span class="pocetVKosiku" id=@idPocetVKosiku>  @Model[i].PocetKusuVKosiku </span>
+                            }
+                            @{
+                                string idPlusTlacitko = "plusTlacitkoArtikly" + idProduktu;
+                            } 
+                            @if (User.Identity.Name is not null)
+                            {
+                                <span class="plusTlacitkoArtikly" style="color:red" id=@idPlusTlacitko> + </span>
+                            }   
+                        </div>
+                    @{string idHlaskaNedostatek  = "HlaskaNedostatek"+idProduktu; } 
+                             <span class="hlaskaNedostatek" id = @idHlaskaNedostatek> 
+                                     Skladem  @Model[i].Artikl.KusuNaSklade kusů
+                             </span>
+                        </div>
+                    }
+            </div>
+            <section class="odkazy">         
+                        @{
+                            int v = ViewBag.KolikataPolozka;
+                        }
+                        @for(int i=1; i<=ViewBag.PocetStranek; i++)
+                        {
+                            @if (i == v)
+                            {
+                                <b>
+                                    [@(i)]
+                                </b>
+                            }
+                            else    
+                            {
+                              if(ViewBag.TypArtiklu == (int)TypArtiklu.AkustickeKytary){
+                                <a href=@Url.Action("StrankaAkustickeKytary","Artikly", new{KolikataPolozka = @i})>[@(i)]</a>
+                              }
+                              else if(ViewBag.TypArtiklu == (int)TypArtiklu.ElektrickeKytary){
+                                <a href=@Url.Action("StrankaElektrickeKytary","Artikly", new{KolikataPolozka = @i})>[@(i)]</a>
+                              }
+                              else if(ViewBag.TypArtiklu == (int)TypArtiklu.Baskytary){
+                                <a href=@Url.Action("StrankaBaskytary","Artikly", new{KolikataPolozka = @i})>[@(i)]</a>
+                              }
+                              else if(ViewBag.TypArtiklu == (int)TypArtiklu.Smes){
+                                <a href=@Url.Action("StrankaVsechnyArtikly","Artikly", new{KolikataPolozka = @i})>[@(i)]</a>
+                              }
+                            }
+                        }        
+            </section>
+</div>
+
+<script> 
+    var idArtiklu = 0;
+    var pocetVKosiku = 0;
+    @*---------------------------------------------------------minus tlacitko handler----------------------------------------------------------------------------------------*@
+    function vyberPosledniCisloZeStringu(retezec){
+        var regex = "[0-9]+";
+        var podretezce = retezec.match(regex);
+        return podretezce[podretezce.length-1]; 
+    }
+    $(".minusTlacitkoArtikly").click(
+        function(){
+            var obsahIdAtributuElementTlacitka = $(this).attr("id");
+            idArtiklu = parseInt(vyberPosledniCisloZeStringu(obsahIdAtributuElementTlacitka));
+            var idElementuPoctuVKosiku = "pocetVKosiku"+idArtiklu; 
+            pocetVKosiku = parseInt($("#"+idElementuPoctuVKosiku).html());
+            if(pocetVKosiku>0 )
+                customAjaxMinus();
+            
+            @*$(".pocetVKosiku").html(pocetVKosiku);*@
+        }
+    );
+    function customAjaxMinus() {
+            $.ajax({
+                  type: 'GET',
+                  url: '@Url.Action("MinusTlacitkoKontroler", "Kosik")',
+                  success: function (data) { 
+                           $("#pocetVKosiku"+idArtiklu).html( data );  
+                  },
+                  error: function (errorData) {  },
+                  data: { pocet: pocetVKosiku, idArtikl: idArtiklu }
+                });
+    }
+    @*---------------------------------------------------------plus tlacitko handler----------------------------------------------------------------------------------------*@
+    $(".plusTlacitkoArtikly").click(
+        function(){
+            var obsahIdAtributuElementTlacitka = $(this).attr("id");
+            idArtiklu = parseInt(vyberPosledniCisloZeStringu(obsahIdAtributuElementTlacitka));
+            var idElementuPoctuVKosiku = "pocetVKosiku"+idArtiklu; 
+            pocetVKosiku = parseInt($("#"+idElementuPoctuVKosiku).html());
+            customAjaxPlus();
+        }
+    );
+    function customAjaxPlus() {
+            $.ajax({
+                  type: 'GET',
+                  url: '@Url.Action("PlusTlacitkoKontroler", "Kosik")',
+                  success: function (data) { 
+                           $("#pocetVKosiku"+idArtiklu).html( data );  
+                  },
+                  error: function (errorData) {  },
+                  data: { pocet: pocetVKosiku, idArtikl: idArtiklu }
+                });
+    } 
+</script>
+
+
+    

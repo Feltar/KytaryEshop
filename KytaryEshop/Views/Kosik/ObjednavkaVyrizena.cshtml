@@ -1,0 +1,40 @@
+﻿      <link rel="stylesheet" href="~/CssSoubory/povedloSe.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@500&family=Alegreya+SC&display=swap" rel="stylesheet">
+
+
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model bool;
+
+      <div class="MezeraObjednavkaVyrizena">
+
+
+      </div>
+      @if(Model){   
+          <div class="uspesnostVyrizeniObjednavky">
+            <div class="ikona">
+              <img src="~/Obrazky/succ.png" alt="" class="obrazekIkona" >
+            </div>
+              <div class="textovePole">
+                  Objednávka byla úspěšně vyřízena!
+              </div>
+          </div>
+      }
+      else{
+          <div class="uspesnostVyrizeniObjednavky">
+            <div class="ikona">
+              <img src="~/Obrazky/unsec.png" alt="" class="obrazekIkona" >
+            </div>
+              <div class="textovePole">
+                  Vyrizeni objednavky selhalo.
+              </div>
+          </div>
+      }
+
+
+
+

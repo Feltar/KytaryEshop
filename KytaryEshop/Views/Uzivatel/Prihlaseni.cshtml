@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Kytary.Models.UzivatelModel;
+
+<div class="container">
+     <div class="row">
+        <div class="offset-md-4">   
+            @using(Html.BeginForm("Prihlaseni", "Uzivatel", FormMethod.Post)){
+            <form>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.EmailovaAdresa)
+                            <div class="col-md-5">
+                                @Html.EditorFor(model=>model.EmailovaAdresa, new { htmlAttributes = new { @class = "form-control", @type = "email", @placeholder = "honzanovak@seznam.cz" } } )
+                                @Html.ValidationMessageFor(model => model.EmailovaAdresa, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model=>model.Heslo)
+                            <div class="col-md-5 ">
+                                @Html.EditorFor(model=>model.Heslo, new { htmlAttributes = new { @class = "form-control", @type = "password", @placeholder = "qwert"} } )
+                                @Html.ValidationMessageFor(model => model.Heslo, "", new {@class = "text-danger"} )
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark btn-sm">Hotovo</button>
+
+            </form>
+            }
+        </div>
+    </div>
+</div>
