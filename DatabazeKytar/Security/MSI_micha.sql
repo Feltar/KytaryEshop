@@ -1,3 +1,0 @@
-﻿CREATE LOGIN [MSI\micha]
-    FROM WINDOWS;
-
