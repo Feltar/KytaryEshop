@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KytaryEshop", "KytaryEshop\
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DatabazeSortiment", "DatabazeSortiment\DatabazeSortiment.sqlproj", "{D9CAB7D0-C9E2-4E07-A78E-331E547505E4}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "UzivatelskeProfili", "UzivatelskeProfili\UzivatelskeProfili.sqlproj", "{49E14023-FEFE-43B3-9106-A028604AD09B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,12 @@ Global
 		{D9CAB7D0-C9E2-4E07-A78E-331E547505E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9CAB7D0-C9E2-4E07-A78E-331E547505E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D9CAB7D0-C9E2-4E07-A78E-331E547505E4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E14023-FEFE-43B3-9106-A028604AD09B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
