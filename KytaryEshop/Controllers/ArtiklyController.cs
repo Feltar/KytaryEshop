@@ -1,10 +1,13 @@
 ﻿using Kytary.Backend.BModels;
 using Kytary.Backend.Business_Logika;
 using Kytary.Models.Enum;
+using KytaryEshop;
 using KytaryEshop.Areas.Identity.Data;
 using KytaryEshop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NHibernate;
+
 
 namespace Kytary.Models
 {
@@ -38,7 +41,14 @@ namespace Kytary.Models
         {
             //Nacteni artiklu
             //Spočteme indexy artiklů, které se na dané strance vyskytuji a příslušné artikly načteme z databáze
-            int PocetPolozek = ArtiklProcesor.PocetArtiklu(typ);
+            //int PocetPolozek = ArtiklProcesor.PocetArtiklu(typ);
+            //[TO DO]
+            var fabrika = PersistenceManager.SessionFabrika;
+            int PocetPolozek;
+            using (var session = fabrika.OpenSession()) {
+                PocetPolozek = session.QueryOver<ArtiklBModel>().Where(x => x.TypArtiklu == typ)
+                                                                .RowCount();
+            }
             int k = 0;
             if (PocetPolozek % 12 > 0)
             {
@@ -48,7 +58,17 @@ namespace Kytary.Models
             ViewBag.TypArtiklu = (int)typ;
 
             ViewBag.KolikataPolozka = KolikataStranka;
-            List<ArtiklBModel> nacteneArtikly = ArtiklProcesor.NactiArtikly(12 * (KolikataStranka - 1), 12, typ);
+
+            //List<ArtiklBModel> nacteneArtikly = ArtiklProcesor.NactiArtikly(12 * (KolikataStranka - 1), 12, typ);
+            //[TO DO]
+            IList<ArtiklBModel> nacteneArtikly;
+            using (var session = fabrika.OpenSession()) {
+                nacteneArtikly = session.QueryOver<ArtiklBModel>()
+                                            .Where(x => x.TypArtiklu == typ)
+                                            .Skip(12 * (KolikataStranka - 1))
+                                            .Take(12)
+                                            .List<ArtiklBModel>();
+            }
 
 
             //U prvky v uživatelově košíku, načteme jejich četnost. S touto informací převedem načtené artikly z databáze na frontendové položky zobrazení
@@ -122,7 +142,14 @@ namespace Kytary.Models
             /// Akce vrací některou ze stránek seznamu všech artiklů, které má eshop na skladě. Artikly jsou sdružovány do stránek po 12. 
             /// Na vstupu akce obdrží kolikátou stránku seznamu si chce uživatel zobrazit a na výstup dá její zobrazení společně s příslušnými daty.
             /// </summary>
-            int PocetPolozek = ArtiklProcesor.PocetArtiklu();
+            /// 
+            int PocetPolozek;
+            var fabrika = PersistenceManager.SessionFabrika;
+            using (var session = fabrika.OpenSession()) {
+                PocetPolozek = session.QueryOver<ArtiklBModel>()
+                                          .RowCount();
+
+            }
             int k = 0;
             if (PocetPolozek % 12 > 0)
             {
@@ -134,11 +161,18 @@ namespace Kytary.Models
             ViewBag.TypArtiklu = (int)TypArtiklu.Smes;
             ViewBag.KolikataPolozka = KolikataPolozka;
             //predelej nacti artikly na nacti polozky - pak pridej do view, pocet kusu
-            List<ArtiklBModel> nacteneArtikly = ArtiklProcesor.NactiArtikly(12 * (KolikataPolozka - 1), 12);
+            
+            //List<ArtiklBModel> nacteneArtikly = ArtiklProcesor.NactiArtikly(12 * (KolikataPolozka - 1), 12);
+            //[TO DO]
+            IList<ArtiklBModel> nacteneArtikly;
+            using (var session = fabrika.OpenSession())
+            {
+                    nacteneArtikly = session.QueryOver<ArtiklBModel>()
+                                            .Skip(12 * (KolikataPolozka - 1))
+                                            .Take(12)
+                                            .List<ArtiklBModel>();
+            }
 
-
-
-            //!!!!!!!Je treba osetrit jeslize tam ten kosik neni - Inicializace kosiku.
             var idUzivatel = _userManager.GetUserId(HttpContext.User);
             List<PolozkaKosikuLightModel> kosikLight = KosikUtility.nactiKosikZDatabaze(idUzivatel);
             List<PolozkaKosikuKompletModel> polozkyKomplet = new List<PolozkaKosikuKompletModel>();

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<class name ="ArtiklBModel" table="Artikl" lazy="false">
+	<id name="Id">
+		<column name ="IdArtikl"/>
+		<generator class ="native"/>
+	</id>
+	<property name ="CenaKus" column ="CenaKus"/>
+	<property name ="TypArtiklu" column ="TypArtiklu"/>
+	<property name="Znacka" column="Znacka" />
+	<property name="NazevProdukt" column ="NazevProdukt"/>
+	<property name="KusuNaSklade" column ="KusuNaSklade"/>	
+</class>

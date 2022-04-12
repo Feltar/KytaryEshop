@@ -5,15 +5,11 @@
     /// </summary>
     public class ObjednavkaBModel
     {
-        public List<PolozkaObjednavkyBModel> PolozkyObjednavky { get; set; }
-        public DateTime Datum { get; set; }
-        public int IdObjednavka { get; set; }
-        public string IdUzivatel { get; set; }
-        public TypyArtiklu typArtiklu { get; set; }
-        public ObjednavkaBModel(DateTime Datum, int IdObjednavka, string idUzivatel) { 
-            this.IdUzivatel = idUzivatel;
-            this.IdObjednavka = IdObjednavka;
-            this.Datum = Datum;
-        }
+        public ObjednavkaBModel() { }
+        public IList<PolozkaObjednavkyBModel> PolozkyObjednavky { get; set; }
+
+        public virtual DateTime Datum { get; set; }
+        public virtual int IdObjednavka { get; set; }
+        public virtual string IdUzivatel { get; set; }
     }
 }

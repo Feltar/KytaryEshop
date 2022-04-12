@@ -15,10 +15,10 @@ namespace KytaryEshop.Models
         public int CenaKus { get; set; }
         public PolozkaObjednavkyModel(PolozkaObjednavkyBModel polozka)
         {
-            this.TypArtiklu = (TypArtiklu)((int)polozka.TypArtiklu);
-            this.Znacka = polozka.Znacka;
+            this.TypArtiklu = (TypArtiklu)((int)polozka.Artikl.TypArtiklu);
+            this.Znacka = polozka.Artikl.Znacka;
             this.PocetKusu = polozka.PocetKusu;
-            this.NazevProdukt = polozka.NazevProdukt;
+            this.NazevProdukt = polozka.Artikl.NazevProdukt;
             this.CenaKus = polozka.CenaKus;
         }
 

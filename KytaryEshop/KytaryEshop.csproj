@@ -8,9 +8,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Artikl.hbm.xml" />
+    <None Remove="hibernate.cfg.xml" />
+    <None Remove="Objednavka.hbm.xml" />
+    <None Remove="PolozkaKosiku.hbm.xml" />
+    <None Remove="PolozkaObjednavky.hbm.xml" />
+    <None Remove="Uzivatel.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="PolozkaObjednavky.hbm.xml" />
+    <EmbeddedResource Include="PolozkaKosiku.hbm.xml" />
+    <EmbeddedResource Include="Objednavka.hbm.xml" />
+    <EmbeddedResource Include="Artikl.hbm.xml" />
+    <EmbeddedResource Include="hibernate.cfg.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -18,8 +37,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NHibernate" Version="5.3.11" />
     <PackageReference Include="SqlKata" Version="2.3.7" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

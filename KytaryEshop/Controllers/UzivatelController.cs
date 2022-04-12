@@ -1,5 +1,7 @@
-﻿using Kytary.Backend.Business_Logika;
+﻿using Kytary.Backend.BModels;
+using Kytary.Backend.Business_Logika;
 using Kytary.Models;
+using KytaryEshop;
 using KytaryEshop.Areas.Identity.Data;
 using KytaryEshop.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -148,8 +150,11 @@ namespace Kytary.Controllers
         public async Task<ActionResult> ZobrazHistoriiObjednavek()
         {
             var idUzivatel = _userManager.GetUserId(HttpContext.User);
-            var objednavkyBackend = ObjednavkaProcesor.NacteniObjednavekVykonanychUzivatelem(idUzivatel);
-            
+            var fabrika = PersistenceManager.SessionFabrika;
+            IList<ObjednavkaBModel> objednavkyBackend;
+            using (var session = fabrika.OpenSession()) {
+                objednavkyBackend = session.QueryOver<ObjednavkaBModel>().Where(x => x.IdUzivatel == idUzivatel).List();
+            }
             var objednavky = objednavkyBackend.Select(x => new ObjednavkaModel(x)).ToList();
             return View("ZobrazHistoriiObjednavek",objednavky);
         }

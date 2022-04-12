@@ -1,32 +1,20 @@
 ﻿namespace Kytary.Backend.BModels
 {
+    using KytaryEshop;
+    using NHibernate;
     /// <summary>
     /// Model položky v tabulce dbo.Artikl.
     /// </summary>
     public class ArtiklBModel
     {
-        public TypyArtiklu TypArtiklu { get; set; }
-        public int IdArtikl { get; }
-        public int CenaKus { get; set; }
-        public string Znacka { get; set; }
-        public string NazevProdukt { get; set; }
-        public int KusuNaSklade { get; set; }
-        public ArtiklBModel(int IdArtikl, int CenaKus, string Znacka, string NazevProdukt, int KusuNaSklade) { 
-            this.CenaKus = CenaKus;
-            this.Znacka = Znacka;
-            this.NazevProdukt = NazevProdukt;
-            this.KusuNaSklade = KusuNaSklade;        
-            this.IdArtikl = IdArtikl;
-        }
-        public ArtiklBModel(int IdArtikl, int CenaKus, string Znacka, string NazevProdukt, int KusuNaSklade, int TypArtiklu)
-        {
-            this.CenaKus = CenaKus;
-            this.Znacka = Znacka;
-            this.NazevProdukt = NazevProdukt;
-            this.KusuNaSklade = KusuNaSklade;
-            this.IdArtikl = IdArtikl;
-            this.TypArtiklu = (TypyArtiklu)TypArtiklu;
-        }
+        public virtual TypyArtiklu TypArtiklu { get; set; }
+        public virtual int IdArtikl { get; set; }
+        public virtual int CenaKus { get; set; }
+        public virtual string Znacka { get; set; }
+        public virtual string NazevProdukt { get; set; }
+        public virtual int KusuNaSklade { get; set; }
+
+        public ArtiklBModel() { }
 
     }
 }

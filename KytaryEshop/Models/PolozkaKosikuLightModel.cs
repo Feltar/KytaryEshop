@@ -7,7 +7,7 @@ namespace Kytary.Models
     /// </summary>
     public class PolozkaKosikuLightModel
     {
-
+        
         public int idArtiklu { get; set; }
         public int pocetKusu { get; set; }
         public PolozkaKosikuLightModel(int idArtiklu, int pocetKusu) {
@@ -15,7 +15,7 @@ namespace Kytary.Models
             this.pocetKusu = pocetKusu;
         }
         public static implicit operator PolozkaKosikuLightModel(PolozkaKosikuBModel vstup) {
-            return new PolozkaKosikuLightModel(vstup.IdArtikl, vstup.PocetKusu);
+            return new PolozkaKosikuLightModel(vstup.Artikl.IdArtikl, vstup.PocetKusu);
         }
     }
 }

@@ -5,15 +5,76 @@ using KytaryEshop.Areas.Identity.Data;
 using Kytary.Backend.Business_Logika;
 using Kytary.Models;
 using Kytary.Backend.BModels;
-using Kytary.Backend.Data_Access;
 using Dapper;
 using System.Data.SqlClient;
+using NHibernate;
 
 
 
 
 
 
+
+ArtiklBModel artikl;
+ObjednavkaBModel objednavka;
+PolozkaKosikuBModel polozka;
+PolozkaObjednavkyBModel polozkaObj;
+
+
+
+KytaryEshop.PersistenceManager.ConfigureNHibernate();
+ISessionFactory Fabrika =  KytaryEshop.PersistenceManager.SessionFabrika;
+
+
+
+
+
+
+
+
+using (var session = Fabrika.OpenSession()) {
+    using (var tx = session.BeginTransaction()){
+
+         //var a = session.Get<PolozkaKosikuBModel>(24005);
+         //a.PocetKusu += 1;
+         //session.Update(a);
+
+
+         int CenaKus = session.Query<ArtiklBModel>()
+                .Where(y => y.IdArtikl == 2011)
+                .Select(x => x.CenaKus)
+                .Single();
+
+
+
+        int sklademArtiklu = session.Query<ArtiklBModel>()
+                        .Where(y => y.IdArtikl == 2011)
+                        .Select(x => x.KusuNaSklade)
+                        .Single();
+
+        //[TO DO]
+        var nacteneArtikly = session.QueryOver<ArtiklBModel>()
+                                    .Where(x => x.TypArtiklu == 0)
+                                    .Skip(12 * (1 - 1))
+                                    .Take(12)             
+                                    .List<ArtiklBModel>();
+
+
+
+
+        artikl = session.Get<ArtiklBModel>(2011);
+
+        polozkaObj = session.Get<PolozkaObjednavkyBModel>(7005);
+
+
+        objednavka = session.Get<ObjednavkaBModel>(8005);
+
+
+
+        polozka = session.Get<PolozkaKosikuBModel>(23003);
+        tx.Commit();
+    }
+}
 
 
 

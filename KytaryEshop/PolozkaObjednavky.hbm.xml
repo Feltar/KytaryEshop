@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+
+
+<hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
+	  assembly = "KytaryEshop" namespace = "Kytary.Backend.BModels">
+	<class  name="PolozkaObjednavkyBModel" table="ObjednavkaArtikl" lazy="false">
+
+		<id name="IdPolozkaObjednavky">
+			<column name="IdObjednavkaArtikl"/>
+			<generator class="identity"/>
+		</id>
+
+		<property name="IdObjednavka" column ="IdObjednavka"/>
+		<property name="PocetKusu" column ="PocetKusu"/>
+		<property name="CenaKus" column ="CenaKus"/>
+
+
+		<many-to-one name="Artikl"
+					 class="ArtiklBModel"
+					 column="IdArtikl"
+					 cascade="all"/>
+	
+	</class>
+</hibernate-mapping>

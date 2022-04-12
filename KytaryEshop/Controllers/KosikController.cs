@@ -1,6 +1,7 @@
 ﻿using Kytary.Backend.BModels;
 using Kytary.Backend.Business_Logika;
 using Kytary.Models;
+using KytaryEshop;
 using KytaryEshop.Areas.Identity.Data;
 using KytaryEshop.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -37,14 +38,22 @@ namespace Kytary.Controllers
 
             List<PolozkaKosikuKompletModel> kosikKomplet = new List<PolozkaKosikuKompletModel>();
 
+
+
             foreach (var item in kosikLight)
             {
-                ArtiklModel artikl = new ArtiklModel(item.idArtiklu);
-                PolozkaKosikuKompletModel polozka = new PolozkaKosikuKompletModel(artikl, item.pocetKusu);
-                kosikKomplet.Add(polozka);
+                //[TO DO]
+                var fabrika = PersistenceManager.SessionFabrika;
+                using (var session = fabrika.OpenSession())
+                {
+                    ArtiklBModel artiklBackend = session.Get<ArtiklBModel>(item.idArtiklu);
+                    ArtiklModel artikl = new ArtiklModel(artiklBackend);
+                    PolozkaKosikuKompletModel polozka = new PolozkaKosikuKompletModel(artikl, item.pocetKusu);
+                    kosikKomplet.Add(polozka);
+                }
             }
 
-            return View("ZobrazKosik",kosikKomplet ??= new List<PolozkaKosikuKompletModel>());
+            return View("ZobrazKosik", kosikKomplet ??= new List<PolozkaKosikuKompletModel>());
         }
 
         //********************************************************************Kontrolery tlacitek pro nastavení četnoasti artiklů v košíku.
@@ -60,25 +69,52 @@ namespace Kytary.Controllers
 
             var idUzivatel = _userManager.GetUserId(HttpContext.User);
 
-
-            if (idUzivatel is null ||pocet<=0) return 0;
-
-            if (pocet == 1)
+            if (idUzivatel is null || pocet <= 0) return 0;
+            var fabrika = PersistenceManager.SessionFabrika;
+            using (var session = fabrika.OpenSession())
             {
-                if (PolozkaKosikuProcesor.SmazPolozkuZKosiku(idArtikl,idUzivatel))
-                    return 0;
-                else
-                    return 1;
+                using (var transakce = session.BeginTransaction())
+                {
+                    if (pocet == 1)
+                    {
 
+                        //[TO DO]
+                        var polozka = session.QueryOver<PolozkaKosikuBModel>().Where(x => x.IdUzivatel == idUzivatel)
+                                                                              .And(y => y.Artikl.IdArtikl == idArtikl).SingleOrDefault();
+                        try
+                        {
+                            session.Delete(polozka);
+                            transakce.Commit();
+                            return 0;
+                        }
+                        catch
+                        {
+                            return 1;
+                        }
+                    }
+
+                    else
+                    {
+
+                        //[TO DO]
+                        var polozka = session.QueryOver<PolozkaKosikuBModel>().Where(x => x.IdUzivatel == idUzivatel)
+                                                                              .And(y => y.Artikl.IdArtikl == idArtikl).SingleOrDefault();
+                        polozka.PocetKusu -= 1;
+                        try
+                        {
+                            session.Save(polozka);
+                            transakce.Commit();
+                            return pocet - 1;
+                        }
+                        catch
+                        {
+                            transakce.Rollback();
+                            return pocet;
+                        }
+
+                    }
+                }
             }
-            else {
-                if (PolozkaKosikuProcesor.ZmenKvantitu(idArtikl, idUzivatel, pocet - 1))
-                    return pocet - 1;
-                else
-                    return pocet;
-
-            }
-
         }
         /// <summary>
         ///Metoda zpracovává požadavek na inkrementaci počtu artiklů s identifikátorem idArtikl v tabulce košíku přihlášeného uživatele.  Vrací výsledný počet artiklů.
@@ -90,15 +126,53 @@ namespace Kytary.Controllers
         {
             var idUzivatel = _userManager.GetUserId(HttpContext.User);
 
-            if (idUzivatel is null || pocet + 1 > ArtiklProcesor.CetnostArtiklu(idArtikl)) return pocet;
+
+            var fabrika = PersistenceManager.SessionFabrika;
+            int sklademArtiklu;
+            using (var session = fabrika.OpenSession())
+            {
+                sklademArtiklu = session.Query<ArtiklBModel>()
+                    .Where(y => y.IdArtikl == idArtikl)
+                    .Select(x => x.KusuNaSklade)
+                    .Single();
+            }
+
+            if (idUzivatel is null || pocet + 1 > sklademArtiklu) return pocet;
 
 
-            if (pocet == 0)
-                PolozkaKosikuProcesor.UlozPolozkuUzivatele(idArtikl, 1, idUzivatel);
-            else
-                PolozkaKosikuProcesor.ZmenKvantitu(idArtikl, idUzivatel, pocet + 1);
+            using (var session = fabrika.OpenSession())
+            {
+                using (var transakce = session.BeginTransaction())
+                { //[TO DO]
+                    var polozka = session.QueryOver<PolozkaKosikuBModel>().Where(x => x.IdUzivatel == idUzivatel)
+                                                                          .And(y => y.Artikl.IdArtikl == idArtikl).SingleOrDefault();
+                    if (polozka is null)
+                    {
+                        polozka = new PolozkaKosikuBModel()
+                        {
+                            IdUzivatel = idUzivatel,
+                            PocetKusu = 1,
+                            Artikl = session.Get<ArtiklBModel>(idArtikl)
+                        };
+                        session.Save(polozka);
+                        transakce.Commit();
+                        return 1;
+                    }
+                    polozka.PocetKusu += 1;
+                    try
+                    {
+                        session.Update(polozka);
+                        transakce.Commit();
+                        return pocet + 1;
 
-            return pocet + 1;
+                    }
+                    catch
+                    {
+                        transakce.Rollback();
+                        return pocet;
+                    }
+                }
+            }
         }
         //********************************************************************Kontrolery tlacitek pro nastavení četnoasti artiklů v košíku.
 
@@ -108,14 +182,20 @@ namespace Kytary.Controllers
         /// </summary>
         /// <returns>Zobrazení informující klienta o průběhu vyřízení objednávky.</returns>
         [Authorize]
-        public IActionResult VyridObjednavku() {     
+        public IActionResult VyridObjednavku()
+        {
 
             var idUzivatel = _userManager.GetUserId(HttpContext.User);
-            
-            List<PolozkaKosikuBModel> kosik = KosikUtility.nactiKosikZDatabaze(idUzivatel)
-                                                               .Select(x => new  PolozkaKosikuBModel(x.idArtiklu,x.pocetKusu)).ToList();
-            bool vyrizeniObjednavkyDopadloZdarne = ObjednavkaProcesor.PridejObjednavku(DateTime.Now,idUzivatel, kosik);
-            return View("ObjednavkaVyrizena", vyrizeniObjednavkyDopadloZdarne);
+
+
+            //[TO DO]
+            var fabrika = PersistenceManager.SessionFabrika;
+            using (var session = fabrika.OpenSession())
+            {
+                IList<PolozkaKosikuBModel> kosik = session.QueryOver<PolozkaKosikuBModel>().Where(x => x.IdUzivatel == idUzivatel).List();
+                bool vyrizeniObjednavkyDopadloZdarne = ObjednavkaProcesor.PridejObjednavku(DateTime.Now, idUzivatel, kosik);
+                return View("ObjednavkaVyrizena", vyrizeniObjednavkyDopadloZdarne);
+            }
         }
 
 
